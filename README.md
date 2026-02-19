@@ -1,156 +1,214 @@
-# VRM Frontend – React Application
+# VRM Frontend (Vendor Risk Management UI)
 
-## Overview
-
-This is the frontend UI for the Vendor Risk Management (VRM) platform built using React.
-It supports:
-
-* User Login (Authentication)
-* View Notifications
-* Upload Evidence Files
-* Dashboard Access
-
-Frontend connects to backend APIs running on Django.
+React-based frontend for the Vendor Risk Management (VRM) system.
+This application connects with Django backend APIs to provide authentication, dashboard, notifications, and evidence management features.
 
 ---
 
-## Prerequisites
+## Features
 
-Make sure the following are installed:
-
-* Node.js (v16 or above)
-* npm (comes with Node.js)
-* Backend server running on http://localhost:8000
-
----
-
-## Project Setup Steps
-
-### Step 1: Open project folder
-
-```bash
-cd vrm-frontend
-```
+* User Authentication (Login)
+* Dashboard view
+* Notifications list and mark as read
+* Evidence upload and evidence list
+* Secure API integration using JWT token
+* Role-based system support (Admin, Vendor, Reviewer)
 
 ---
 
-### Step 2: Install dependencies
+## Tech Stack
 
-```bash
-npm install
-```
-
----
-
-### Step 3: Create .env file
-
-Create a file named `.env` in the root folder and add:
-
-```
-REACT_APP_API_URL=http://localhost:8000/api
-```
+* React.js
+* Axios (API integration)
+* React Router
+* Context API (Authentication state)
+* Django REST Framework (Backend)
 
 ---
 
-### Step 4: Start the frontend server
-
-```bash
-npm start
-```
-
-Frontend will run at:
+## Project Structure
 
 ```
-http://localhost:3000/login
+vrm-frontend/
+├── src/
+│   ├── context/
+│   │   └── AuthContext.js
+│   ├── pages/
+│   │   ├── LoginPage.js
+│   │   ├── DashboardPage.js
+│   │   ├── NotificationsPage.js
+│   │   └── EvidenceUploadPage.js
+│   ├── services/
+│   │   ├── apiClient.js
+│   │   └── index.js
+│   └── App.js
 ```
 
 ---
 
 ## Backend Requirement
 
-Make sure backend is running using:
-
-```bash
-python manage.py runserver
-```
-
-Backend URL:
+Make sure Django backend is running:
 
 ```
 http://localhost:8000
 ```
 
----
-
-## Login Credentials
-
-Use any of the following demo accounts:
-
-Admin:
-
-```
-Email: admin@vrm.com
-Password: password123
-```
-
-Vendor:
-
-```
-Email: vendor@vrm.com
-Password: password123
-```
-
-Reviewer:
-
-```
-Email: reviewer@vrm.com
-Password: password123
-```
-
----
-
-## Features Available
-
-* Login and authentication
-* Dashboard view
-* Notifications list
-* Mark notifications as read
-* Upload evidence files
-* View uploaded evidence list
-
----
-
-## Important Notes
-
-* Backend must be running before starting frontend
-* API base URL must be correctly set in `.env`
-* If login fails, clear browser localStorage and try again
-
----
-
-## Run Summary (Quick Start)
-
 Run backend:
 
-```bash
+```
 python manage.py runserver
 ```
 
-Run frontend:
+---
 
-```bash
+## Frontend Setup Instructions
+
+### 1. Install dependencies
+
+```
 npm install
+```
+
+### 2. Create .env file in project root
+
+```
+REACT_APP_API_URL=http://localhost:8000/api
+```
+
+### 3. Run frontend
+
+```
 npm start
 ```
 
-Open in browser:
+Frontend will run on:
 
 ```
-http://localhost:3000/login
+http://localhost:3000
+```
+
+---
+
+## Authentication Flow
+
+Login API:
+
+```
+POST /api/auth/login/
+```
+
+Example request:
+
+```
+{
+  "email": "admin@vrm.com",
+  "password": "password123"
+}
+```
+
+After login:
+
+* JWT token stored in localStorage
+* orgId stored in localStorage
+* Used for all authenticated API calls
+
+Headers used:
+
+```
+Authorization: Bearer <token>
+org-id: <orgId>
+```
+
+---
+
+## Main API Integrations
+
+### Login
+
+```
+POST /api/auth/login/
+```
+
+### Get Notifications
+
+```
+GET /api/notifications/
+```
+
+### Mark notification as read
+
+```
+PATCH /api/notifications/{id}/mark-read/
+```
+
+### Upload Evidence
+
+```
+POST /api/evidence/upload/
+```
+
+### Get Evidence List
+
+```
+GET /api/evidence/list/?assessment_id=<id>
+```
+
+---
+
+## Test Credentials
+
+Admin
+Email: [admin@vrm.com](mailto:admin@vrm.com)
+Password: password123
+
+Vendor
+Email: [vendor@vrm.com](mailto:vendor@vrm.com)
+Password: password123
+
+Reviewer
+Email: [reviewer@vrm.com](mailto:reviewer@vrm.com)
+Password: password123
+
+---
+
+## Troubleshooting
+
+### Backend not running
+
+Start backend:
+
+```
+python manage.py runserver
+```
+
+### API connection error
+
+Check:
+
+```
+.env file
+REACT_APP_API_URL=http://localhost:8000/api
+```
+
+### Port already in use
+
+Run on different port:
+
+```
+npm start -- --port 3001
 ```
 
 ---
 
 ## Status
 
-Frontend is ready and connected with backend APIs.
+Frontend is fully integrated with backend APIs.
+Ready for QA testing and production deployment.
+
+---
+
+## Maintained By
+
+Sneha
+VRM Backend & Frontend Team
