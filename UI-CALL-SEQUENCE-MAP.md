@@ -37,6 +37,7 @@ vrm-frontend/
 ```
 
 **3 Core Screens Implemented:**
+
 1. ✅ Login (email/password)
 2. ✅ Notifications (list with pagination, mark as read)
 3. ✅ Evidence Upload (file + metadata)
@@ -89,9 +90,9 @@ vrm-frontend/
 
 #### API Calls
 
-| Endpoint | Method | Headers | Payload | Response | Status |
-|----------|--------|---------|---------|----------|--------|
-| `/auth/login/` | POST | `Content-Type: application/json` | `{email, password}` | `{token, user}` | ✅ Implemented |
+| Endpoint       | Method | Headers                          | Payload             | Response        | Status         |
+| -------------- | ------ | -------------------------------- | ------------------- | --------------- | -------------- |
+| `/auth/login/` | POST   | `Content-Type: application/json` | `{email, password}` | `{token, user}` | ✅ Implemented |
 
 #### Code Example
 
@@ -101,7 +102,7 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   const result = await authService.login(email, password);
   if (result.success) {
-    navigate('/dashboard');
+    navigate("/dashboard");
   }
 };
 
@@ -171,6 +172,7 @@ Reviewer: reviewer@vrm.com  / password123
 #### No API Calls on This Page
 
 This is a dashboard/hub page that shows:
+
 - Current user info (from context, not fresh API call)
 - Links to other features
 - Quick reference guide
@@ -227,12 +229,12 @@ User Interaction: Mark All as Read
 
 #### API Calls
 
-| Endpoint | Method | Headers | Query | Response | Status | UI Impact |
-|----------|--------|---------|-------|----------|--------|-----------|
-| `/notifications/` | GET | Auth, org-id | `?page=1&page_size=20` | `{count, results, next}` | ✅ Impl | List render |
-| `/notifications/unread-count/` | GET | Auth, org-id | - | `{unread_count, total_count}` | ✅ Impl | Badge count |
-| `/notifications/{id}/mark-read/` | PATCH | Auth, org-id | - | `{status: "ok"}` | ✅ Impl | Item → read state |
-| `/notifications/read-all/` | POST | Auth, org-id | - | `{status: "ok"}` | ✅ Impl | All → read state |
+| Endpoint                         | Method | Headers      | Query                  | Response                      | Status  | UI Impact         |
+| -------------------------------- | ------ | ------------ | ---------------------- | ----------------------------- | ------- | ----------------- |
+| `/notifications/`                | GET    | Auth, org-id | `?page=1&page_size=20` | `{count, results, next}`      | ✅ Impl | List render       |
+| `/notifications/unread-count/`   | GET    | Auth, org-id | -                      | `{unread_count, total_count}` | ✅ Impl | Badge count       |
+| `/notifications/{id}/mark-read/` | PATCH  | Auth, org-id | -                      | `{status: "ok"}`              | ✅ Impl | Item → read state |
+| `/notifications/read-all/`       | POST   | Auth, org-id | -                      | `{status: "ok"}`              | ✅ Impl | All → read state  |
 
 #### Response Format Example
 
@@ -277,7 +279,7 @@ useEffect(() => {
 const fetchNotifications = async () => {
   const response = await notificationsService.getNotifications(currentPage);
   setNotifications(response.data.results);
-  
+
   const countResponse = await notificationsService.getUnreadCount();
   setUnreadCount(countResponse.data.unread_count);
 };
@@ -370,14 +372,15 @@ User Action: View Evidence List
 
 #### API Calls
 
-| Endpoint | Method | Headers | Payload/Query | Response | Status | UI Impact |
-|----------|--------|---------|---------------|----------|--------|-----------|
-| `/evidence/upload/` | POST | Auth, org-id | `{assessment_id, question_id, file_url, expiry_date, ...}` | `{detail, id, created_at}` | ✅ Impl | Success toast |
-| `/evidence/list/` | GET | Auth, org-id | `?assessment_id=10&page=1` | `{count, results}` | ✅ Impl | List render |
+| Endpoint            | Method | Headers      | Payload/Query                                              | Response                   | Status  | UI Impact     |
+| ------------------- | ------ | ------------ | ---------------------------------------------------------- | -------------------------- | ------- | ------------- |
+| `/evidence/upload/` | POST   | Auth, org-id | `{assessment_id, question_id, file_url, expiry_date, ...}` | `{detail, id, created_at}` | ✅ Impl | Success toast |
+| `/evidence/list/`   | GET    | Auth, org-id | `?assessment_id=10&page=1`                                 | `{count, results}`         | ✅ Impl | List render   |
 
 #### Validation Rules
 
 **Frontend Validation:**
+
 ```javascript
 ✅ assessment_id: required, must be integer > 0
 ✅ question_id: required, must be integer > 0
@@ -389,6 +392,7 @@ User Action: View Evidence List
 ```
 
 **Backend Validation (expected 400 errors):**
+
 ```json
 {
   "error": "expiry_date and question_id required"
@@ -458,25 +462,25 @@ Response (200):
 // EvidenceUploadPage.js
 const handleSubmit = async (e) => {
   e.preventDefault();
-  
+
   // Validation
   if (selectedDate < today) {
-    setError('Expiry date cannot be in the past');
+    setError("Expiry date cannot be in the past");
     return;
   }
-  
+
   const payload = {
     assessment_id: parseInt(assessmentId),
     question_id: parseInt(questionId),
     file_url: fileUrl,
     expiry_date: expiryDate,
-    file_type: file?.name?.split('.')?.pop(),
+    file_type: file?.name?.split(".")?.pop(),
     org_id: parseInt(orgId),
     uploaded_by: user?.id,
   };
 
   await evidenceService.uploadEvidence(payload);
-  setSuccess('Evidence uploaded successfully!');
+  setSuccess("Evidence uploaded successfully!");
 };
 
 const fetchEvidenceList = async () => {
@@ -490,6 +494,7 @@ const fetchEvidenceList = async () => {
 **Backend provides:** `expires_in_days` field
 
 **Frontend logic:**
+
 ```javascript
 const warning = evidenceService.getExpiryWarning(expiresInDays);
 
@@ -501,10 +506,11 @@ const warning = evidenceService.getExpiryWarning(expiresInDays);
 ```
 
 **UI Colors:**
-- `level: 'ok'`       → GREEN (✅ valid)
-- `level: 'warning'`  → ORANGE (⚠️ expiring soon)
+
+- `level: 'ok'` → GREEN (✅ valid)
+- `level: 'warning'` → ORANGE (⚠️ expiring soon)
 - `level: 'critical'` → RED (🔴 expiring very soon < 7 days)
-- `level: 'expired'`  → GRAY (❌ expired)
+- `level: 'expired'` → GRAY (❌ expired)
 
 ---
 
@@ -531,6 +537,7 @@ const apiClient = axios.create({
 ### Auth Context (`src/context/AuthContext.js`)
 
 **State Management**
+
 ```javascript
 {
   user: {id, email, first_name, last_name, org_id, is_staff},
@@ -585,10 +592,11 @@ try {
   // Success logic
 } catch (error) {
   // Handle error
-  const errorMsg = error.response?.data?.error ||
-                   error.response?.data?.detail ||
-                   error.message ||
-                   'Request failed';
+  const errorMsg =
+    error.response?.data?.error ||
+    error.response?.data?.detail ||
+    error.message ||
+    "Request failed";
   setError(errorMsg);
 }
 ```
@@ -596,12 +604,13 @@ try {
 ### Global 401 Handling
 
 **In apiClient.js:**
+
 ```javascript
 if (error.response?.status === 401) {
   // Token expired
-  localStorage.removeItem('authToken');
-  localStorage.removeItem('orgId');
-  window.location.href = '/login';
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("orgId");
+  window.location.href = "/login";
 }
 ```
 
@@ -632,34 +641,34 @@ error.error || error.detail || "Something went wrong"
 
 #### Login
 
-| Test | Steps | Expected Result | Status |
-|------|-------|-----------------|--------|
-| Valid credentials | Enter admin@vrm.com / password123 → Submit | Redirect to /dashboard, token in localStorage | ⏳ TBD |
-| Invalid email | Enter wrong@test.com / password123 → Submit | Error message displayed | ⏳ TBD |
-| Invalid password | Enter admin@vrm.com / wrong → Submit | Error message displayed | ⏳ TBD |
-| Empty fields | Leave empty → Try submit | HTML5 required validation | ⏳ TBD |
-| Token expired | Session > 1 hour → Next API call | Redirect to login | ⏳ TBD |
+| Test              | Steps                                       | Expected Result                               | Status |
+| ----------------- | ------------------------------------------- | --------------------------------------------- | ------ |
+| Valid credentials | Enter admin@vrm.com / password123 → Submit  | Redirect to /dashboard, token in localStorage | ⏳ TBD |
+| Invalid email     | Enter wrong@test.com / password123 → Submit | Error message displayed                       | ⏳ TBD |
+| Invalid password  | Enter admin@vrm.com / wrong → Submit        | Error message displayed                       | ⏳ TBD |
+| Empty fields      | Leave empty → Try submit                    | HTML5 required validation                     | ⏳ TBD |
+| Token expired     | Session > 1 hour → Next API call            | Redirect to login                             | ⏳ TBD |
 
 #### Notifications
 
-| Test | Steps | Expected Result | Status |
-|------|-------|-----------------|--------|
-| Load list | Navigate to /notifications | GET /notifications/?page=1 → Display results | ⏳ TBD |
-| Unread count | View unread badge | GET /notifications/unread-count/ → Badge updates | ⏳ TBD |
-| Mark single | Click ✓ on unread item | PATCH /notifications/{id}/mark-read/ → Item → read | ⏳ TBD |
-| Mark all | Click "Mark All" when unread > 0 | POST /notifications/read-all/ → All → read, badge = 0 | ⏳ TBD |
-| Pagination | Click "Next" when page 2 available | GET /notifications/?page=2 → Show page 2 | ⏳ TBD |
+| Test         | Steps                              | Expected Result                                       | Status |
+| ------------ | ---------------------------------- | ----------------------------------------------------- | ------ |
+| Load list    | Navigate to /notifications         | GET /notifications/?page=1 → Display results          | ⏳ TBD |
+| Unread count | View unread badge                  | GET /notifications/unread-count/ → Badge updates      | ⏳ TBD |
+| Mark single  | Click ✓ on unread item             | PATCH /notifications/{id}/mark-read/ → Item → read    | ⏳ TBD |
+| Mark all     | Click "Mark All" when unread > 0   | POST /notifications/read-all/ → All → read, badge = 0 | ⏳ TBD |
+| Pagination   | Click "Next" when page 2 available | GET /notifications/?page=2 → Show page 2              | ⏳ TBD |
 
 #### Evidence Upload
 
-| Test | Steps | Expected Result | Status |
-|------|-------|-----------------|--------|
-| Valid upload | Enter all fields + submit | POST /evidence/upload/ → 201 success, toast shown | ⏳ TBD |
-| Past expiry | Enter past date → Submit | Error: "cannot be in past" | ⏳ TBD |
-| Missing field | Leave Assessment ID empty → Submit | Error: "required" | ⏳ TBD |
-| List evidence | Show list for assessment | GET /evidence/list/?assessment_id=10 → Display | ⏳ TBD |
-| Expiry warning | View evidence with < 30 days | Color = ORANGE, message shows days left | ⏳ TBD |
-| Critical expiry | View evidence with < 7 days | Color = RED, message shows urgent | ⏳ TBD |
+| Test            | Steps                              | Expected Result                                   | Status |
+| --------------- | ---------------------------------- | ------------------------------------------------- | ------ |
+| Valid upload    | Enter all fields + submit          | POST /evidence/upload/ → 201 success, toast shown | ⏳ TBD |
+| Past expiry     | Enter past date → Submit           | Error: "cannot be in past"                        | ⏳ TBD |
+| Missing field   | Leave Assessment ID empty → Submit | Error: "required"                                 | ⏳ TBD |
+| List evidence   | Show list for assessment           | GET /evidence/list/?assessment_id=10 → Display    | ⏳ TBD |
+| Expiry warning  | View evidence with < 30 days       | Color = ORANGE, message shows days left           | ⏳ TBD |
+| Critical expiry | View evidence with < 7 days        | Color = RED, message shows urgent                 | ⏳ TBD |
 
 ---
 
@@ -667,12 +676,12 @@ error.error || error.detail || "Something went wrong"
 
 ### 4 Core Pages Implemented
 
-| Page | Route | Auth Required | Purpose | Status |
-|------|-------|---------------|---------|--------|
-| Login | `/login` | No | Email/password authentication | ✅ Done |
-| Dashboard | `/dashboard` | Yes | Main hub, user info, quick links | ✅ Done |
-| Notifications | `/notifications` | Yes | List & mark notifications as read | ✅ Done |
-| Evidence Upload | `/evidence` | Yes | Upload evidence files with metadata | ✅ Done |
+| Page            | Route            | Auth Required | Purpose                             | Status  |
+| --------------- | ---------------- | ------------- | ----------------------------------- | ------- |
+| Login           | `/login`         | No            | Email/password authentication       | ✅ Done |
+| Dashboard       | `/dashboard`     | Yes           | Main hub, user info, quick links    | ✅ Done |
+| Notifications   | `/notifications` | Yes           | List & mark notifications as read   | ✅ Done |
+| Evidence Upload | `/evidence`      | Yes           | Upload evidence files with metadata | ✅ Done |
 
 ### Proposed Future Pages (Not in Scope)
 
@@ -714,6 +723,7 @@ After this UI skeleton, backend must have:
 ### For UI Lead (Next Phase)
 
 After approval:
+
 1. `npm install` to load dependencies
 2. `npm start` to launch dev server
 3. Test against live backend
@@ -752,12 +762,12 @@ npm start
 
 ## Approvers Sign-Off
 
-| Person | Role | Approval | Date | Notes |
-|--------|------|----------|------|-------|
-| Renuka | Backend Lead | ⏳ Pending | - | Verify endpoints implemented |
-| Pranjali | QA Lead | ⏳ Pending | - | Run test matrix |
-| Anuja | Tracker | ⏳ Pending | - | Update tracker status |
-| Ishan | PM | ⏳ Pending | - | Gate approval |
+| Person   | Role         | Approval   | Date | Notes                        |
+| -------- | ------------ | ---------- | ---- | ---------------------------- |
+| Renuka   | Backend Lead | ⏳ Pending | -    | Verify endpoints implemented |
+| Pranjali | QA Lead      | ⏳ Pending | -    | Run test matrix              |
+| Anuja    | Tracker      | ⏳ Pending | -    | Update tracker status        |
+| Ishan    | PM           | ⏳ Pending | -    | Gate approval                |
 
 ---
 

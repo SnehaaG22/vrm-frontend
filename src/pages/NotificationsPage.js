@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { notificationsService } from '../services';
-import { useAuth } from '../context/AuthContext';
-import '../styles/pages.css';
+import React, { useState, useEffect } from "react";
+import { notificationsService } from "../services";
+import { useAuth } from "../context/AuthContext";
+import "../styles/pages.css";
 
 /**
  * NOTIFICATIONS PAGE
@@ -37,7 +37,7 @@ const NotificationsPage = () => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
 
@@ -49,21 +49,40 @@ const NotificationsPage = () => {
   const fetchNotifications = async () => {
     try {
       setLoading(true);
-      setError('');
+      setError("");
 
+      console.log("Fetching notifications from:", notificationsService);
       const response = await notificationsService.getNotifications(
         currentPage,
-        20
+        20,
       );
-      setNotifications(response.data.results);
-      setTotalCount(response.data.count);
 
-      // Fetch unread count
-      const countResponse = await notificationsService.getUnreadCount();
-      setUnreadCount(countResponse.data.unread_count);
+      console.log("Notifications response:", response);
+
+      // Handle both direct array and paginated response
+      const results = response?.results || response || [];
+      const count = response?.count || results.length;
+
+      setNotifications(results);
+      setTotalCount(count);
+
+      // Fetch unread count (don't fail if this endpoint doesn't exist)
+      try {
+        const countResponse = await notificationsService.getUnreadCount();
+        setUnreadCount(countResponse?.unread_count || 0);
+      } catch (countErr) {
+        console.warn("Could not fetch unread count:", countErr);
+        setUnreadCount(0);
+      }
     } catch (err) {
-      setError('Failed to load notifications');
-      console.error('Error fetching notifications:', err);
+      const errorMessage =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        err.message ||
+        "Unknown error";
+      setError(`Failed to load notifications: ${errorMessage}`);
+      console.error("Notifications fetch error:", err);
+      setNotifications([]);
     } finally {
       setLoading(false);
     }
@@ -75,7 +94,7 @@ const NotificationsPage = () => {
       // Refresh the list
       fetchNotifications();
     } catch (err) {
-      console.error('Failed to mark notification as read:', err);
+      console.error("Failed to mark notification as read:", err);
     }
   };
 
@@ -85,7 +104,7 @@ const NotificationsPage = () => {
       // Refresh the list
       fetchNotifications();
     } catch (err) {
-      console.error('Failed to mark all as read:', err);
+      console.error("Failed to mark all as read:", err);
     }
   };
 
@@ -106,11 +125,11 @@ const NotificationsPage = () => {
 
   const getNotificationIcon = (type) => {
     const icons = {
-      evidence_upload: '📎',
-      assessment_assigned: '📋',
-      approval_needed: '⚠️',
-      renewal_reminder: '🔄',
-      default: '📢',
+      evidence_upload: "📎",
+      assessment_assigned: "📋",
+      approval_needed: "⚠️",
+      renewal_reminder: "🔄",
+      default: "📢",
     };
     return icons[type] || icons.default;
   };
@@ -143,7 +162,7 @@ const NotificationsPage = () => {
             <div
               key={notification.id}
               className={`notification-item ${
-                notification.status === 'unread' ? 'unread' : ''
+                notification.status === "unread" ? "unread" : ""
               }`}
             >
               <div className="notification-icon">
@@ -155,7 +174,7 @@ const NotificationsPage = () => {
                   {formatDate(notification.created_at)}
                 </small>
               </div>
-              {notification.status === 'unread' && (
+              {notification.status === "unread" && (
                 <button
                   className="mark-read-btn"
                   onClick={() => handleMarkAsRead(notification.id)}

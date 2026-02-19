@@ -266,9 +266,9 @@
   gap: 16px;
 }
 
-.form-group input[type='number'],
-.form-group input[type='date'],
-.form-group input[type='file'] {
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group input[type="file"] {
   width: 100%;
 }
 

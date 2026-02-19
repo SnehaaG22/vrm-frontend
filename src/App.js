@@ -1,14 +1,16 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 
 // Import pages
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import NotificationsPage from './pages/NotificationsPage';
-import EvidenceUploadPage from './pages/EvidenceUploadPage';
+import LoginPage from "./pages/LoginPage";
+import DashboardPage from "./pages/DashboardPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import EvidenceUploadPage from "./pages/EvidenceUploadPage";
+import AssessmentsPage from "./pages/AssessmentsPage";
+import VendorsPage from "./pages/VendorsPage";
 
-import './App.css';
+import "./App.css";
 
 /**
  * Protected Route Component
@@ -60,6 +62,22 @@ function AppContent() {
               element={
                 <ProtectedRoute>
                   <EvidenceUploadPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments"
+              element={
+                <ProtectedRoute>
+                  <AssessmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendors"
+              element={
+                <ProtectedRoute>
+                  <VendorsPage />
                 </ProtectedRoute>
               }
             />

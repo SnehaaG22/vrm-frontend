@@ -1,7 +1,7 @@
-import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import '../styles/pages.css';
+import React from "react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import "../styles/pages.css";
 
 /**
  * DASHBOARD PAGE
@@ -14,7 +14,7 @@ const DashboardPage = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/login');
+    navigate("/login");
   };
 
   return (
@@ -64,32 +64,32 @@ const DashboardPage = () => {
           <div className="links-grid">
             <button
               className="link-card"
-              onClick={() => navigate('/notifications')}
+              onClick={() => navigate("/notifications")}
             >
               <div className="card-icon">📢</div>
               <h3>Notifications</h3>
               <p>View all messages and alerts</p>
             </button>
 
-            <button
-              className="link-card"
-              onClick={() => navigate('/evidence')}
-            >
+            <button className="link-card" onClick={() => navigate("/evidence")}>
               <div className="card-icon">📎</div>
               <h3>Upload Evidence</h3>
               <p>Submit evidence files and documents</p>
             </button>
 
-            <button className="link-card" disabled>
+            <button
+              className="link-card"
+              onClick={() => navigate("/assessments")}
+            >
               <div className="card-icon">📊</div>
               <h3>Assessments</h3>
-              <p>View assigned assessments (Coming Soon)</p>
+              <p>View assigned assessments</p>
             </button>
 
-            <button className="link-card" disabled>
+            <button className="link-card" onClick={() => navigate("/vendors")}>
               <div className="card-icon">👥</div>
               <h3>Vendors</h3>
-              <p>View vendor information (Coming Soon)</p>
+              <p>View vendor information</p>
             </button>
           </div>
         </section>
@@ -97,23 +97,22 @@ const DashboardPage = () => {
         <section className="api-reference">
           <h2>API Integration Guide</h2>
           <div className="reference-card">
-            <p>
-              All API calls require:
-            </p>
+            <p>All API calls require:</p>
             <code>
-              Headers: {'{'}
+              Headers: {"{"}
               <br />
-              &nbsp;&nbsp;"Authorization": "Bearer &lt;token&gt;",<br />
-              &nbsp;&nbsp;"org-id": "&lt;org_id&gt;",<br />
-              &nbsp;&nbsp;"Content-Type": "application/json"<br />
-              {'}'}
+              &nbsp;&nbsp;"Authorization": "Bearer &lt;token&gt;",
+              <br />
+              &nbsp;&nbsp;"org-id": "&lt;org_id&gt;",
+              <br />
+              &nbsp;&nbsp;"Content-Type": "application/json"
+              <br />
+              {"}"}
             </code>
             <p>
               <strong>Base URL:</strong> http://localhost:8000/api
             </p>
-            <p>
-              See documentation on backend repo for full API details.
-            </p>
+            <p>See documentation on backend repo for full API details.</p>
           </div>
         </section>
       </div>

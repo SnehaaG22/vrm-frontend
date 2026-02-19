@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { evidenceService } from '../services';
-import { useAuth } from '../context/AuthContext';
-import '../styles/pages.css';
+import React, { useState, useEffect } from "react";
+import { evidenceService } from "../services";
+import { useAuth } from "../context/AuthContext";
+import "../styles/pages.css";
 
 /**
  * EVIDENCE UPLOAD PAGE
@@ -27,14 +27,14 @@ import '../styles/pages.css';
  */
 const EvidenceUploadPage = () => {
   const { user, orgId } = useAuth();
-  const [assessmentId, setAssessmentId] = useState('');
-  const [questionId, setQuestionId] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
+  const [assessmentId, setAssessmentId] = useState("");
+  const [questionId, setQuestionId] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
   const [file, setFile] = useState(null);
-  const [fileUrl, setFileUrl] = useState('');
+  const [fileUrl, setFileUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState('');
-  const [error, setError] = useState('');
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
   const [evidenceList, setEvidenceList] = useState([]);
   const [showList, setShowList] = useState(false);
 
@@ -47,12 +47,11 @@ const EvidenceUploadPage = () => {
 
   const fetchEvidenceList = async () => {
     try {
-      const response = await evidenceService.getEvidenceByAssessment(
-        assessmentId
-      );
+      const response =
+        await evidenceService.getEvidenceByAssessment(assessmentId);
       setEvidenceList(response.data.results);
     } catch (err) {
-      console.error('Failed to load evidence list:', err);
+      console.error("Failed to load evidence list:", err);
     }
   };
 
@@ -72,24 +71,24 @@ const EvidenceUploadPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     // Validation
     if (!assessmentId) {
-      setError('Assessment ID is required');
+      setError("Assessment ID is required");
       return;
     }
     if (!questionId) {
-      setError('Question ID is required');
+      setError("Question ID is required");
       return;
     }
     if (!expiryDate) {
-      setError('Expiry date is required');
+      setError("Expiry date is required");
       return;
     }
     if (!fileUrl) {
-      setError('File URL is required (upload file first)');
+      setError("File URL is required (upload file first)");
       return;
     }
 
@@ -98,7 +97,7 @@ const EvidenceUploadPage = () => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (selectedDate < today) {
-      setError('Expiry date cannot be in the past');
+      setError("Expiry date cannot be in the past");
       return;
     }
 
@@ -110,21 +109,21 @@ const EvidenceUploadPage = () => {
         question_id: parseInt(questionId),
         file_url: fileUrl,
         expiry_date: expiryDate,
-        file_type: file?.name?.split('.')?.pop()?.toLowerCase() || 'pdf',
+        file_type: file?.name?.split(".")?.pop()?.toLowerCase() || "pdf",
         org_id: parseInt(orgId || 101),
         uploaded_by: user?.id || 5,
       };
 
       await evidenceService.uploadEvidence(payload);
 
-      setSuccess('Evidence uploaded successfully! Notification sent to team.');
+      setSuccess("Evidence uploaded successfully! Notification sent to team.");
 
       // Reset form
-      setAssessmentId('');
-      setQuestionId('');
-      setExpiryDate('');
+      setAssessmentId("");
+      setQuestionId("");
+      setExpiryDate("");
       setFile(null);
-      setFileUrl('');
+      setFileUrl("");
 
       // Refresh list
       if (showList) {
@@ -132,12 +131,12 @@ const EvidenceUploadPage = () => {
       }
 
       // Clear success message after 3 seconds
-      setTimeout(() => setSuccess(''), 3000);
+      setTimeout(() => setSuccess(""), 3000);
     } catch (err) {
       const errorMsg =
-        err.response?.data?.error || err.message || 'Upload failed';
+        err.response?.data?.error || err.message || "Upload failed";
       setError(errorMsg);
-      console.error('Upload error:', err);
+      console.error("Upload error:", err);
     } finally {
       setLoading(false);
     }
@@ -227,7 +226,7 @@ const EvidenceUploadPage = () => {
             )}
 
             <button type="submit" disabled={loading} className="submit-btn">
-              {loading ? 'Uploading...' : 'Upload Evidence'}
+              {loading ? "Uploading..." : "Upload Evidence"}
             </button>
           </form>
         </div>
@@ -240,7 +239,7 @@ const EvidenceUploadPage = () => {
               className="toggle-btn"
               onClick={() => setShowList(!showList)}
             >
-              {showList ? 'Hide' : 'Show'} List
+              {showList ? "Hide" : "Show"} List
             </button>
           </div>
 
@@ -249,27 +248,30 @@ const EvidenceUploadPage = () => {
               {evidenceList.length === 0 ? (
                 <p className="empty">
                   {assessmentId
-                    ? 'No evidence uploaded yet for this assessment'
-                    : 'Enter assessment ID to view evidence'}
+                    ? "No evidence uploaded yet for this assessment"
+                    : "Enter assessment ID to view evidence"}
                 </p>
               ) : (
                 <div className="evidence-items">
                   {evidenceList.map((item) => {
                     const warning = getExpiryWarning(item.expires_in_days);
                     return (
-                      <div key={item.id} className={`evidence-item ${warning.level}`}>
+                      <div
+                        key={item.id}
+                        className={`evidence-item ${warning.level}`}
+                      >
                         <div className="evidence-info">
                           <p>
                             <strong>Question {item.question_id}</strong>
                           </p>
                           <p className="file-name">
-                            {item.file_url?.split('/').pop()}
+                            {item.file_url?.split("/").pop()}
                           </p>
                           <p className={`expiry-status ${warning.level}`}>
                             {warning.message}
                           </p>
                           <small>
-                            Uploaded:{' '}
+                            Uploaded:{" "}
                             {new Date(item.created_at).toLocaleDateString()}
                           </small>
                         </div>

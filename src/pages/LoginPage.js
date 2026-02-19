@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import '../styles/pages.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import "../styles/pages.css";
 
 /**
  * LOGIN PAGE
@@ -21,14 +21,14 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
@@ -36,13 +36,13 @@ const LoginPage = () => {
 
       if (result.success) {
         // Navigate to dashboard/home page
-        navigate('/dashboard');
+        navigate("/dashboard");
       } else {
         setError(result.error);
       }
     } catch (err) {
-      setError('An unexpected error occurred');
-      console.error('Login error:', err);
+      setError("An unexpected error occurred");
+      console.error("Login error:", err);
     } finally {
       setLoading(false);
     }
@@ -84,7 +84,7 @@ const LoginPage = () => {
           </div>
 
           <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 

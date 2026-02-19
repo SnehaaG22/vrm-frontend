@@ -1,5 +1,11 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { authService } from '../services';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import { authService } from "../services";
 
 // Create the context
 const AuthContext = createContext();
@@ -8,7 +14,7 @@ const AuthContext = createContext();
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 };
@@ -24,8 +30,8 @@ export const AuthProvider = ({ children }) => {
   // Initialize auth state from localStorage
   useEffect(() => {
     const storedToken = authService.getAuthToken();
-    const storedOrgId = localStorage.getItem('orgId');
-    const storedUser = localStorage.getItem('user');
+    const storedOrgId = localStorage.getItem("orgId");
+    const storedUser = localStorage.getItem("user");
 
     if (storedToken) {
       setToken(storedToken);
@@ -44,10 +50,10 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
 
       const response = await authService.login(email, password);
-      const { token: newToken, user: newUser } = response.data;
+      const { token: newToken, user: newUser } = response;
 
       // Determine org_id from user or default
-      const newOrgId = newUser.org_id || '101';
+      const newOrgId = newUser.org_id || "101";
 
       // Store in state
       setToken(newToken);
@@ -56,12 +62,12 @@ export const AuthProvider = ({ children }) => {
 
       // Store in localStorage
       authService.setAuthToken(newToken, newOrgId);
-      localStorage.setItem('user', JSON.stringify(newUser));
+      localStorage.setItem("user", JSON.stringify(newUser));
 
       return { success: true, user: newUser };
     } catch (err) {
       const errorMessage =
-        err.response?.data?.detail || err.message || 'Login failed';
+        err.response?.data?.detail || err.message || "Login failed";
       setError(errorMessage);
       return { success: false, error: errorMessage };
     } finally {
@@ -81,13 +87,12 @@ export const AuthProvider = ({ children }) => {
   const fetchCurrentUser = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await authService.getCurrentUser();
-      const userData = response.data;
+      const userData = await authService.getCurrentUser();
       setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
+      localStorage.setItem("user", JSON.stringify(userData));
       return userData;
     } catch (err) {
-      console.error('Failed to fetch current user:', err);
+      console.error("Failed to fetch current user:", err);
       // If 401, clear auth
       if (err.response?.status === 401) {
         logout();

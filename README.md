@@ -243,8 +243,8 @@ All API calls use the `services/index.js` library:
 import {
   authService,
   notificationsService,
-  evidenceService
-} from '../services';
+  evidenceService,
+} from "../services";
 
 // Example: Login
 const result = await authService.login(email, password);
@@ -277,11 +277,11 @@ Content-Type: application/json
 
 ### Demo Users (from Backend)
 
-| Username | Email               | Password     | Role     | Access Level          |
-| -------- | ------------------- | ------------ | -------- | --------------------- |
-| admin    | admin@vrm.com       | password123  | Admin    | All endpoints         |
-| vendor   | vendor@vrm.com      | password123  | Vendor   | Evidence upload, view |
-| reviewer | reviewer@vrm.com    | password123  | Reviewer | Evidence review       |
+| Username | Email            | Password    | Role     | Access Level          |
+| -------- | ---------------- | ----------- | -------- | --------------------- |
+| admin    | admin@vrm.com    | password123 | Admin    | All endpoints         |
+| vendor   | vendor@vrm.com   | password123 | Vendor   | Evidence upload, view |
+| reviewer | reviewer@vrm.com | password123 | Reviewer | Evidence review       |
 
 ### Features Unlocked Per Role
 
@@ -344,7 +344,7 @@ localStorage.clear();
 
 ```javascript
 // In apiClient.js - verify interceptor is working
-console.log(config.headers['org-id']);
+console.log(config.headers["org-id"]);
 ```
 
 ---
