@@ -1,28 +1,14 @@
 import axios from "axios";
 
 // Configuration
-// Default to a relative path so the frontend can proxy requests in dev
-// or work with the same origin in production. You can override with
-// REACT_APP_API_URL when needed (e.g. https://api.example.com/api).
-const envApiUrl = process.env.REACT_APP_API_URL;
-const isLocalDevHost =
-  typeof window !== "undefined" &&
-  (window.location.hostname === "localhost" ||
-    window.location.hostname === "127.0.0.1");
-const isLocalApiTarget =
-  !!envApiUrl &&
-  (envApiUrl.includes("localhost") || envApiUrl.includes("127.0.0.1"));
-
-// Use CRA proxy in local dev to avoid CORS differences between localhost and 127.0.0.1
 const API_BASE_URL =
-  isLocalDevHost && isLocalApiTarget ? "/api" : envApiUrl || "/api";
+  process.env.REACT_APP_API_URL || "http://localhost:8000/api";
 
-console.log("[apiClient] Using API_BASE_URL:", API_BASE_URL);
+console.log("[API CLIENT] Base URL:", API_BASE_URL);
 
 // Create axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
   headers: {
     "Content-Type": "application/json",
   },
@@ -36,23 +22,44 @@ apiClient.interceptors.request.use(
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log("[API] Token sent:", token.substring(0, 20) + "...");
+    } else {
+      console.warn("[API] WARNING: No auth token found!");
     }
 
     config.headers["org-id"] = orgId;
+    console.log("[API] Org ID:", orgId);
 
+    console.log("[API] Making request to:", config.url);
     return config;
   },
   (error) => {
+    console.error("[API] Request preparation error:", error);
     return Promise.reject(error);
   },
 );
 
 // Add response interceptor to handle 401 errors
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log(
+      "[API] Response from:",
+      response.config.url,
+      "Status:",
+      response.status,
+    );
+    return response;
+  },
   (error) => {
+    console.error("[API] Response error:", {
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message,
+      url: error.config?.url,
+    });
+
     if (error.response?.status === 401) {
-      // Clear auth data and redirect to login
+      console.warn("[API] 401 Unauthorized - redirecting to login");
       localStorage.removeItem("authToken");
       localStorage.removeItem("orgId");
       localStorage.removeItem("user");

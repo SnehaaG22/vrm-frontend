@@ -77,16 +77,19 @@ const DashboardPage = () => {
               <p>Submit evidence files and documents</p>
             </button>
 
-            <button className="link-card" disabled>
+            <button
+              className="link-card"
+              onClick={() => navigate("/assessments")}
+            >
               <div className="card-icon">📊</div>
               <h3>Assessments</h3>
-              <p>View assigned assessments (Coming Soon)</p>
+              <p>View assigned assessments</p>
             </button>
 
-            <button className="link-card" disabled>
+            <button className="link-card" onClick={() => navigate("/vendors")}>
               <div className="card-icon">👥</div>
               <h3>Vendors</h3>
-              <p>View vendor information (Coming Soon)</p>
+              <p>View vendor information</p>
             </button>
           </div>
         </section>

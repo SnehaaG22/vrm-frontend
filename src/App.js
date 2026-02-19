@@ -7,6 +7,8 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import EvidenceUploadPage from "./pages/EvidenceUploadPage";
+import AssessmentsPage from "./pages/AssessmentsPage";
+import VendorsPage from "./pages/VendorsPage";
 
 import "./App.css";
 
@@ -60,6 +62,22 @@ function AppContent() {
               element={
                 <ProtectedRoute>
                   <EvidenceUploadPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/assessments"
+              element={
+                <ProtectedRoute>
+                  <AssessmentsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/vendors"
+              element={
+                <ProtectedRoute>
+                  <VendorsPage />
                 </ProtectedRoute>
               }
             />

@@ -51,19 +51,38 @@ const NotificationsPage = () => {
       setLoading(true);
       setError("");
 
+      console.log("Fetching notifications from:", notificationsService);
       const response = await notificationsService.getNotifications(
         currentPage,
         20,
       );
-      setNotifications(response.data.results);
-      setTotalCount(response.data.count);
 
-      // Fetch unread count
-      const countResponse = await notificationsService.getUnreadCount();
-      setUnreadCount(countResponse.data.unread_count);
+      console.log("Notifications response:", response);
+
+      // Handle both direct array and paginated response
+      const results = response?.results || response || [];
+      const count = response?.count || results.length;
+
+      setNotifications(results);
+      setTotalCount(count);
+
+      // Fetch unread count (don't fail if this endpoint doesn't exist)
+      try {
+        const countResponse = await notificationsService.getUnreadCount();
+        setUnreadCount(countResponse?.unread_count || 0);
+      } catch (countErr) {
+        console.warn("Could not fetch unread count:", countErr);
+        setUnreadCount(0);
+      }
     } catch (err) {
-      setError("Failed to load notifications");
-      console.error("Error fetching notifications:", err);
+      const errorMessage =
+        err.response?.data?.detail ||
+        err.response?.data?.error ||
+        err.message ||
+        "Unknown error";
+      setError(`Failed to load notifications: ${errorMessage}`);
+      console.error("Notifications fetch error:", err);
+      setNotifications([]);
     } finally {
       setLoading(false);
     }

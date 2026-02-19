@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
 
       const response = await authService.login(email, password);
-      const { token: newToken, user: newUser } = response.data;
+      const { token: newToken, user: newUser } = response;
 
       // Determine org_id from user or default
       const newOrgId = newUser.org_id || "101";
@@ -87,8 +87,7 @@ export const AuthProvider = ({ children }) => {
   const fetchCurrentUser = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await authService.getCurrentUser();
-      const userData = response.data;
+      const userData = await authService.getCurrentUser();
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
       return userData;

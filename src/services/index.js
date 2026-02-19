@@ -12,10 +12,12 @@ export const authService = {
    * Returns token and user details
    */
   login: (email, password) => {
-    return apiClient.post("/auth/login/", {
-      email,
-      password,
-    });
+    return apiClient
+      .post("/auth/login/", {
+        email,
+        password,
+      })
+      .then((res) => res.data || res);
   },
 
   /**
@@ -24,7 +26,7 @@ export const authService = {
    * Returns user details including id, email, org_id, role
    */
   getCurrentUser: () => {
-    return apiClient.get("/users/me/");
+    return apiClient.get("/users/me/").then((res) => res.data || res);
   },
 
   /**
@@ -71,12 +73,13 @@ export const notificationsService = {
    * Response includes count, next, previous, results
    */
   getNotifications: (page = 1, pageSize = 20) => {
-    return apiClient.get(`/notifications/`, {
-      params: {
-        page,
-        page_size: pageSize,
-      },
-    });
+    return apiClient
+      .get(`/notifications/`, {
+        params: {
+          page,
+        },
+      })
+      .then((res) => res.data || res);
   },
 
   /**
@@ -86,7 +89,9 @@ export const notificationsService = {
    * Useful for badge display in header
    */
   getUnreadCount: () => {
-    return apiClient.get("/notifications/unread-count/");
+    return apiClient
+      .get("/notifications/unread-count/")
+      .then((res) => res.data || res);
   },
 
   /**
@@ -95,7 +100,9 @@ export const notificationsService = {
    * Returns { status: "ok" }
    */
   markAsRead: (notificationId) => {
-    return apiClient.patch(`/notifications/${notificationId}/mark-read/`, {});
+    return apiClient
+      .patch(`/notifications/${notificationId}/mark-read/`, {})
+      .then((res) => res.data || res);
   },
 
   /**
@@ -105,7 +112,9 @@ export const notificationsService = {
    * Returns { status: "ok" }
    */
   markAllAsRead: () => {
-    return apiClient.post("/notifications/read-all/", {});
+    return apiClient
+      .post("/notifications/read-all/", {})
+      .then((res) => res.data || res);
   },
 };
 
@@ -138,7 +147,9 @@ export const evidenceService = {
    * }
    */
   uploadEvidence: (payload) => {
-    return apiClient.post("/evidence/upload/", payload);
+    return apiClient
+      .post("/evidence/upload/", payload)
+      .then((res) => res.data || res);
   },
 
   /**
@@ -169,13 +180,15 @@ export const evidenceService = {
    * }
    */
   listEvidence: (filters = {}, page = 1, pageSize = 20) => {
-    return apiClient.get("/evidence/list/", {
-      params: {
-        ...filters,
-        page,
-        page_size: pageSize,
-      },
-    });
+    return apiClient
+      .get("/evidence/list/", {
+        params: {
+          ...filters,
+          page,
+          page_size: pageSize,
+        },
+      })
+      .then((res) => res.data || res);
   },
 
   /**
@@ -183,13 +196,15 @@ export const evidenceService = {
    * Retrieves evidence for specific assessment
    */
   getEvidenceByAssessment: (assessmentId, page = 1) => {
-    return apiClient.get("/evidence/list/", {
-      params: {
-        assessment_id: assessmentId,
-        page,
-        page_size: 20,
-      },
-    });
+    return apiClient
+      .get("/evidence/list/", {
+        params: {
+          assessment_id: assessmentId,
+          page,
+          page_size: 20,
+        },
+      })
+      .then((res) => res.data || res);
   },
 
   /**
@@ -204,4 +219,101 @@ export const evidenceService = {
       return { level: "warning", message: `Expires in ${expiresInDays} days` };
     return { level: "ok", message: `Valid for ${expiresInDays} more days` };
   },
+};
+
+/**
+ * ASSESSMENTS SERVICE
+ * Handles assessment-related API calls
+ */
+export const assessmentsService = {
+  /**
+   * GET /assessments/
+   * Retrieves list of assessments
+   */
+  getAssessments: (filters = {}, page = 1) => {
+    return apiClient
+      .get("/assessments/", {
+        params: { ...filters, page },
+      })
+      .then((res) => res.data || res);
+  },
+
+  /**
+   * GET /assessments/{id}/
+   * Retrieves single assessment details
+   */
+  getAssessment: (id) => {
+    return apiClient.get(`/assessments/${id}/`).then((res) => res.data || res);
+  },
+
+  /**
+   * POST /assessments/
+   * Creates new assessment
+   */
+  createAssessment: (data) => {
+    return apiClient.post("/assessments/", data).then((res) => res.data || res);
+  },
+
+  /**
+   * PATCH /assessments/{id}/
+   * Updates assessment
+   */
+  updateAssessment: (id, data) => {
+    return apiClient
+      .patch(`/assessments/${id}/`, data)
+      .then((res) => res.data || res);
+  },
+};
+
+/**
+ * VENDORS SERVICE
+ * Handles vendor-related API calls
+ */
+export const vendorsService = {
+  /**
+   * GET /vendors/
+   * Retrieves list of vendors
+   */
+  getVendors: (filters = {}, page = 1) => {
+    return apiClient
+      .get("/vendors/", {
+        params: { ...filters, page },
+      })
+      .then((res) => res.data || res);
+  },
+
+  /**
+   * GET /vendors/{id}/
+   * Retrieves single vendor details
+   */
+  getVendor: (id) => {
+    return apiClient.get(`/vendors/${id}/`).then((res) => res.data || res);
+  },
+
+  /**
+   * POST /vendors/
+   * Creates new vendor
+   */
+  createVendor: (data) => {
+    return apiClient.post("/vendors/", data).then((res) => res.data || res);
+  },
+
+  /**
+   * PATCH /vendors/{id}/
+   * Updates vendor
+   */
+  updateVendor: (id, data) => {
+    return apiClient
+      .patch(`/vendors/${id}/`, data)
+      .then((res) => res.data || res);
+  },
+};
+
+// Export as top-level functions for convenience
+export const getAssessments = (filters = {}, page = 1) => {
+  return assessmentsService.getAssessments(filters, page);
+};
+
+export const getVendors = (filters = {}, page = 1) => {
+  return vendorsService.getVendors(filters, page);
 };
